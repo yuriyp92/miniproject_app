@@ -1,0 +1,56 @@
+Controles:
+
+<Controles>
+    rows: 6
+    cols: 2
+
+    Label:
+        id: welcome_label
+        text: "SHIELD DECO"
+        font_size: "24dp"
+        size_hint: (0.2, 0.2)
+        pos_hint: {'x':0.3, 'y':0.8}
+
+    Image:
+        source: "shield.jpeg"
+        size_hint: (0.2, 0.2)
+        pos_hint: {'x':0.8, 'y':0.8}
+
+    TextInput:
+        id: text_to_crypt
+        text: "Introduce el texto para cifrar"
+        size_hint: (0.8, 0.2)
+        pos_hint: {'x':0.1, 'y':0.6}
+
+    Label:
+        id: key_slider_value
+        text: str(key_slider.value)
+        size_hint: (0.2, 0.2)
+        pos_hint: {'x':0.1, 'y':0.4}
+
+        
+    Slider:
+        id: key_slider
+        min: -26
+        max: 26
+        value: 0
+        step: 1
+        size_hint: (0.6, 0.2)
+        pos_hint: {'x':0.25, 'y':0.4}
+    
+    Button:
+        id: crypt_button
+        text: "Cifrar"
+        on_press: root.cifra(text_to_crypt.text, int(key_slider.value))
+        disabled: False
+        size_hint: (0.2, 0.1)
+        pos_hint: {'x':0.4, 'y':0.3}
+
+
+    Label:
+        id: crypted_text
+        text: root.cifra(text_to_crypt.text, int(key_slider.value))
+        size_hint: (0.8, 0.2)
+        pos_hint: {'x':0.1, 'y':0.1}
+
+    
