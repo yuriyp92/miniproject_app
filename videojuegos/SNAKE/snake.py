@@ -1,0 +1,84 @@
+import random
+from settings import DARKGREEN
+from settings import GRID_HEIGHT, GRID_WIDTH
+from warnings import simplefilter
+from settings import GREEN, TILESIZE
+import pygame
+from settings import *
+from pygame import Vector2
+
+class Snake(pygame.sprite.Sprite):
+    def __init__(self,tile_x,tile_y, groups):
+        pygame.sprite.Sprite.__init__(self, groups)
+        self.image = pygame.Surface((TILESIZE,TILESIZE))
+        self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.tail_image = pygame.Surface((TILESIZE,TILESIZE))
+        self.tail_image.fill(DARKGREEN)
+        self.head = Vector2(tile_x, tile_y)
+        self.delta = Vector2(0,0)
+        self.move_heat = 0
+        self.move_delta_heat = 0.2
+        self.tail = []
+        self.tail_length = 1
+        self.is_alive = True
+    
+    def update(self):
+        self.keyboard_input()
+
+        self.move_heat += self.move_delta_heat
+        if self.move_heat > 1:
+            self.update_tale()
+            self.move_heat = 0
+            self.head += self.delta
+            self.check_collition_with_tail()
+        
+        self.wrap_around_world()
+        self.rect.topleft = self.head * TILESIZE
+
+    def keyboard_input(self):
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_LEFT]:
+            self.delta.x = -1
+            self.delta.y = 0
+        if keystate[pygame.K_RIGHT]:
+            self.delta.x = 1
+            self.delta.y = 0
+        if keystate[pygame.K_UP]:
+            self.delta.y = -1
+            self.delta.x = 0
+        if keystate[pygame.K_DOWN]:
+            self.delta.y = 1
+            self.delta.x = 0
+
+    def update_tale(self):
+        if len(self.tail) >= self.tail_length:
+            self.tail.pop()
+        self.tail.insert(0, Vector2(self.head.x,self.head.y))
+        
+    def wrap_around_world(self):
+        if self.head.x < 0:
+            self.head.x = GRID_WIDTH-1
+        if self.head.x > GRID_WIDTH-1:
+            self.head.x = 0
+        if self.head.y < 0:
+            self.head.y = GRID_HEIGHT-1
+        if self.head.y > GRID_HEIGHT-1:
+            self.head.y = 0
+    
+    def draw_tail(self, surface):
+        for i in range(0,len(self.tail)):
+            tail_tile = self.tail[i]
+            surface.blit(self.tail_image, tail_tile*TILESIZE)
+    
+    def grow(self, size_delta):
+        self.tail_length += size_delta
+        self.move_delta_heat += 0.05
+
+    def check_collition_with_tail(self):
+        if self.delta.magnitude()==0:
+            return
+        if self.head in self.tail:
+            self.is_alive = False
+            print("Ouch")
+    

@@ -1,0 +1,73 @@
+ShieldMain:
+
+<ShieldMain>
+    rows: 5
+    
+    Image:
+        source: "shield.png"
+        pos_hint: {"x": 0.05 , "top": 0.95}
+        size_hint: (None, None)
+        size: root.width * 1/3, root.height * 1/6 
+        allow_stretch: True
+        keep_ratio: False
+        
+    TextInput:
+        id: texto_cifrar
+        text: "TEXTO A CIFRAR"
+        pos_hint: {"x": 0.05 , "top": 0.75 }
+        size_hint: (None, None)
+        size: root.width * 0.9  , root.height * 1/6 
+        font_size: "24dp"
+    
+    Slider:
+        pos_hint: {"x": 0.05 , "top": 0.575 }
+        orientation: "horizontal"
+        size_hint: (None, None)
+        size: root.width * 0.6, self.height
+        id: id_slider
+        min: -26
+        max: 26
+        value : 0
+        step: 1
+        
+
+    Label:
+        pos_hint: {"center_x": (id_slider.right / root.right) + 0.05  , "top": 0.575}
+        size_hint: (None, None)
+        id: label_slider
+        text: str(int(id_slider.value))
+        font_size: "24dp"
+    
+    Button:
+        id: button_cifrar
+        pos_hint: {"center_x": (label_slider.right / root.right) + 0.05  , "top": 0.575}
+        size_hint: (None, None)
+        background_color: 0, 0 ,0 ,0 
+        on_press: root.intercambiar(texto_cifrar.text, texto_cifrado.text)
+
+
+        Image:
+            source: "reverse.png"
+            center_x: self.parent.center_x
+            center_y: self.parent.center_y
+            allow_stretch: True
+            keep_ratio: False
+
+    
+    TextInput:
+        id: texto_cifrado
+        text: ""
+        pos_hint: {"x": 0.05 , "top": 0.35 }
+        size_hint: (None, None)
+        size: root.width * 0.9  , root.height * 1/6
+        font_size: "24dp"
+        readonly: True
+
+    Button:
+        id: button_cifrar
+        text: "CIFRAR/DESCIFRAR"
+        pos_hint: {"x": 0.05 , "top": 0.15 }
+        size_hint: (None, None)
+        size: root.width * 0.9  , root.height * 1/8 
+        font_size: "30dp"
+        on_press: root.cifra(texto_cifrar.text, int(id_slider.value))
